@@ -6,24 +6,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TeamSetupModal } from '@/components/session/TeamSetupModal';
-
-type GameType = 'league' | 'friendly' | 'cup' | 'casual';
-
-interface GameSetupForm {
-  homeTeam: string | null;
-  awayTeam: string | null;
-  gameType: GameType;
-  location: string;
-  date: Date;
-  time: Date;
-}
-
-const GAME_TYPES: { value: GameType; label: string }[] = [
-  { value: 'league', label: 'League Match' },
-  { value: 'friendly', label: 'Friendly' },
-  { value: 'cup', label: 'Cup Game' },
-  { value: 'casual', label: 'Casual' },
-];
+import { TeamSummary } from '@/components/session/TeamSummary';
+import { PLAYERS_OPTIONS, GAME_TYPES, GameType } from '@/constants/game';
 
 const EMOJIS = {
   team: '🛡️',
@@ -88,6 +72,11 @@ export default function CreateGameScreen() {
     date: new Date(),
     time: new Date(),
   });
+  const [teamSetup, setTeamSetup] = useState({
+    homeTeam: '',
+    awayTeam: '',
+    playersPerSide: '5-a-side',
+  });
 
   const handleCreate = () => {
     // TODO: Validate and submit form
@@ -99,11 +88,14 @@ export default function CreateGameScreen() {
   };
 
   const handleTeamSetup = (setup: TeamSetup) => {
-    // Update form with team setup
+    setTeamSetup({
+      homeTeam: setup.homeTeam,
+      awayTeam: setup.awayTeam,
+      playersPerSide: PLAYERS_OPTIONS.find(opt => opt.value === setup.playersPerSide)?.label || '5-a-side',
+    });
     updateForm({
       homeTeam: setup.homeTeam,
       awayTeam: setup.awayTeam,
-      // ... other updates
     });
   };
 
@@ -117,6 +109,63 @@ export default function CreateGameScreen() {
         break;
       // ... handle other sections
     }
+  };
+
+  const renderTeamSection = () => {
+    if (teamSetup.homeTeam || teamSetup.awayTeam) {
+      return (
+        <>
+          <TeamSummary
+            homeTeam={teamSetup.homeTeam}
+            awayTeam={teamSetup.awayTeam}
+            playersPerSide={teamSetup.playersPerSide}
+            onEdit={() => setShowTeamSetup(true)}
+          />
+          <Pressable 
+            style={styles.editSection}
+            onPress={() => setShowTeamSetup(true)}
+          >
+            <View style={styles.sectionContent}>
+              <View style={styles.iconContainer}>
+                <ThemedText style={styles.icon}>✏️</ThemedText>
+              </View>
+              <View style={styles.textContainer}>
+                <ThemedText style={styles.label}>Team Setup</ThemedText>
+                <ThemedText style={styles.value}>Edit Teams</ThemedText>
+              </View>
+              <MaterialCommunityIcons 
+                name="chevron-right" 
+                size={24} 
+                color="#ccff33"
+                style={styles.chevron}
+              />
+            </View>
+          </Pressable>
+        </>
+      );
+    }
+
+    return (
+      <Pressable 
+        style={styles.section}
+        onPress={() => setShowTeamSetup(true)}
+      >
+        <View style={styles.sectionContent}>
+          <View style={styles.iconContainer}>
+            <ThemedText style={styles.icon}>🛡️</ThemedText>
+          </View>
+          <View style={styles.textContainer}>
+            <ThemedText style={styles.value}>Select Teams</ThemedText>
+          </View>
+          <MaterialCommunityIcons 
+            name="chevron-right" 
+            size={24} 
+            color="#ccff33"
+            style={styles.chevron}
+          />
+        </View>
+      </Pressable>
+    );
   };
 
   return (
@@ -135,7 +184,9 @@ export default function CreateGameScreen() {
       />
       
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        {SECTIONS.map((section) => (
+        {renderTeamSection()}
+        
+        {SECTIONS.filter(section => section.id !== 'team').map((section) => (
           <Pressable 
             key={section.id}
             style={styles.section}
@@ -263,5 +314,22 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 17,
     fontWeight: '600',
+  },
+  editSection: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 14,
+    marginBottom: 8,
+    marginTop: -4, // Tighter spacing with summary
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 }); 

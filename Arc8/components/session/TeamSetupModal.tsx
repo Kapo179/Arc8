@@ -5,8 +5,7 @@ import { TextInput } from '@/components/ui/TextInput';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-
-type PlayersPerSide = '5' | '6' | '7' | '8' | '9' | '11';
+import { PLAYERS_OPTIONS, PlayersPerSide } from '@/constants/game';
 
 interface TeamSetupModalProps {
   visible: boolean;
@@ -19,15 +18,6 @@ interface TeamSetup {
   awayTeam: string;
   playersPerSide: PlayersPerSide;
 }
-
-const PLAYERS_OPTIONS = [
-  { value: '5', label: '5-a-side' },
-  { value: '6', label: '6-a-side' },
-  { value: '7', label: '7-a-side' },
-  { value: '8', label: '8-a-side' },
-  { value: '9', label: '9-a-side' },
-  { value: '11', label: '11-a-side' },
-];
 
 const TeamBadge = memo(({ 
   side, 
