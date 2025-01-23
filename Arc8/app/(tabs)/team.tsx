@@ -2,13 +2,11 @@ import { StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
+export default function TeamScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Welcome</ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Start building your app here
-      </ThemedText>
+      <ThemedText type="title">Team</ThemedText>
+      <ThemedText style={styles.subtitle}>Your team information</ThemedText>
     </ThemedView>
   );
 }
@@ -23,6 +21,5 @@ const styles = StyleSheet.create({
   subtitle: {
     marginTop: 10,
     fontSize: 16,
-    textAlign: 'center',
   },
-});
+}); 
