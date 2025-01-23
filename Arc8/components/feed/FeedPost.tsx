@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, Pressable, Animated, Image } from 'react-native';
+import { View, StyleSheet, Pressable, Animated, Image, ImageStyle } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFeedStore } from '@/stores/feedStore';
@@ -9,6 +9,12 @@ import * as Haptics from 'expo-haptics';
 interface FeedPostProps {
   post: Post;
   onPress?: () => void;
+}
+
+interface MediaItem {
+  type: 'image' | 'video' | 'map';
+  url: string;
+  aspectRatio?: number;
 }
 
 export function FeedPost({ post, onPress }: FeedPostProps) {
@@ -42,6 +48,13 @@ export function FeedPost({ post, onPress }: FeedPostProps) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     animateButton(repostScale);
     await repost(post.id);
+  };
+
+  const getMediaStyle = (media: MediaItem): ImageStyle => {
+    return {
+      ...styles.media,
+      ...(media.aspectRatio ? { aspectRatio: media.aspectRatio } : {})
+    };
   };
 
   return (
@@ -80,10 +93,7 @@ export function FeedPost({ post, onPress }: FeedPostProps) {
             <Image
               key={index}
               source={{ uri: media.url }}
-              style={[
-                styles.media,
-                media.aspectRatio && { aspectRatio: media.aspectRatio }
-              ]}
+              style={getMediaStyle(media)}
             />
           ))}
         </View>
@@ -171,7 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     backgroundColor: '#2D3748',
-  },
+  } as ImageStyle,
   actions: {
     flexDirection: 'row',
     alignItems: 'center',

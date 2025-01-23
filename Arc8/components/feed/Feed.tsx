@@ -52,6 +52,15 @@ export function Feed({ type }: FeedProps) {
     );
   };
 
+  const renderEmptyComponent = () => {
+    if (loading) return null;
+    return (
+      <ThemedText style={styles.emptyText}>
+        No posts to show
+      </ThemedText>
+    );
+  };
+
   return (
     <FlatList
       data={posts}
@@ -76,13 +85,7 @@ export function Feed({ type }: FeedProps) {
         styles.content,
         posts.length === 0 && styles.centered
       ]}
-      ListEmptyComponent={
-        !loading && (
-          <ThemedText style={styles.emptyText}>
-            No posts to show
-          </ThemedText>
-        )
-      }
+      ListEmptyComponent={renderEmptyComponent}
     />
   );
 }

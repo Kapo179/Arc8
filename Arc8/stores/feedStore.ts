@@ -32,8 +32,9 @@ export const useFeedStore = create<FeedState>((set, get) => ({
         hasMore: !!response.nextCursor,
         loading: false 
       });
-    } catch (error) {
-      set({ error: error.message, loading: false });
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'An error occurred';
+      set({ error, loading: false });
     }
   },
 
@@ -50,8 +51,9 @@ export const useFeedStore = create<FeedState>((set, get) => ({
         hasMore: !!response.nextCursor,
         loading: false 
       });
-    } catch (error) {
-      set({ error: error.message, loading: false });
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'An error occurred';
+      set({ error, loading: false });
     }
   },
 

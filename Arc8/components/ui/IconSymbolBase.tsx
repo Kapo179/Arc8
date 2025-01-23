@@ -1,5 +1,5 @@
 import React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -18,10 +18,11 @@ export function IconSymbol({
   name: IconSymbolName;
   size?: number;
   color: string;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle | TextStyle>;
   filled?: boolean;
 }) {
-  const iconStyle = [{ paddingTop: 4 }, style];
+  // Convert style to TextStyle since icon components expect TextStyle
+  const iconStyle = style as StyleProp<TextStyle>;
 
   switch (name) {
     case 'house':
