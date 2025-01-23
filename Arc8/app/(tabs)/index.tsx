@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { TabBar } from '@/components/ui/TabBar';
+import { FootballFAB } from '@/components/session/FootballFAB';
 
 export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState('For You');
@@ -10,11 +11,14 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TabBar
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabPress={setActiveTab}
-      />
+      <View style={styles.header}>
+        <TabBar
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabPress={setActiveTab}
+        />
+        <FootballFAB />
+      </View>
       <ScrollView 
         style={styles.content}
         contentContainerStyle={styles.contentContainer}
@@ -33,6 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#151718',
+  },
+  header: {
+    position: 'relative',
+    zIndex: 1,
   },
   content: {
     flex: 1,

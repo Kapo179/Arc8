@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { fonts } from '@/src/config/fonts';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import 'react-native-reanimated';
+import { useUIStore } from '@/stores/uiStore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -16,6 +17,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts(fonts);
+  const isModalOpen = useUIStore(state => state.isModalOpen);
 
   useEffect(() => {
     if (loaded) {
@@ -35,6 +37,9 @@ export default function RootLayout() {
             headerShown: false,
             contentStyle: {
               backgroundColor: '#151718',
+            },
+            tabBarStyle: {
+              display: isModalOpen ? 'none' : 'flex',
             },
           }}>
           <Stack.Screen name="(tabs)" />
