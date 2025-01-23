@@ -1,9 +1,22 @@
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabBarBackground() {
-  return <View style={{ backgroundColor: '#ffffff' }} />;
+  const insets = useSafeAreaInsets();
+  
+  return (
+    <View 
+      style={{ 
+        backgroundColor: '#151718',
+        flex: 1,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+      }} 
+    />
+  );
 }
 
 export function useBottomTabOverflow() {
-  return 0;
+  const insets = useSafeAreaInsets();
+  return insets.bottom;
 } 

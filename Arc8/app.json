@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**/*",
+      "assets/fonts/*"
     ],
     "ios": {
       "supportsTablet": true,
@@ -46,8 +47,7 @@
         {
           "initialOrientation": "PORTRAIT"
         }
-      ],
-      "expo-font"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

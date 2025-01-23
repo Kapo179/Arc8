@@ -1,28 +1,48 @@
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { TabBar } from '@/components/ui/TabBar';
 
 export default function HomeScreen() {
+  const [activeTab, setActiveTab] = useState('For You');
+  const tabs = ['For You', 'Activity'];
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">Welcome</ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Start building your app here
-      </ThemedText>
-    </ThemedView>
+    <SafeAreaView style={styles.container}>
+      <TabBar
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabPress={setActiveTab}
+      />
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+      >
+        {activeTab === 'Featured' ? (
+          <ThemedText style={styles.text}>For You</ThemedText>
+        ) : (
+          <ThemedText style={styles.text}>Activity</ThemedText>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#151718',
+  },
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
     padding: 20,
   },
-  subtitle: {
-    marginTop: 10,
+  text: {
+    fontFamily: 'DMSans-Regular',
     fontSize: 16,
-    textAlign: 'center',
+    color: '#fff',
   },
 });

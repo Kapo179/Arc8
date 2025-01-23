@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function AchievementsScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Achievements</ThemedText>
+      <ThemedText type="h1">Achievements</ThemedText>
       <ThemedText style={styles.subtitle}>Your trophies and achievements</ThemedText>
     </ThemedView>
   );

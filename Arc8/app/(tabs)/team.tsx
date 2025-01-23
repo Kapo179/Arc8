@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function TeamScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Team</ThemedText>
+      <ThemedText type="h1">Team</ThemedText>
       <ThemedText style={styles.subtitle}>Your team information</ThemedText>
     </ThemedView>
   );

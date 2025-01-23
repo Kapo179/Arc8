@@ -30,14 +30,18 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: '#151718',
+            },
+          }}>
+          <Stack.Screen name="(tabs)" />
         </Stack>
         <StatusBar 
-          style={Platform.select({ 
-            ios: colorScheme === 'dark' ? 'light' : 'dark',
-            android: 'light' 
-          })} 
+          style="light"
+          backgroundColor="#151718"
         />
       </ThemeProvider>
     </SafeAreaProvider>
