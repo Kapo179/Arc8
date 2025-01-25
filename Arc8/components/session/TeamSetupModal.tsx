@@ -1,11 +1,11 @@
-import React, { useState, memo } from 'react';
-import { View, StyleSheet, Modal, Pressable, Image, Platform, ScrollView } from 'react-native';
+import React, { useState, memo, useRef } from 'react';
+import { View, StyleSheet, Modal, Pressable, Image, Platform, ScrollView, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { TextInput } from '@/components/ui/TextInput';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { PLAYERS_OPTIONS, PlayersPerSide } from '@/constants/game';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 interface TeamSetupModalProps {
   visible: boolean;
@@ -19,38 +19,51 @@ interface TeamSetup {
   playersPerSide: PlayersPerSide;
 }
 
-const TeamBadge = memo(({ 
+const TeamInput = memo(({ 
   side, 
   value, 
   onChange 
 }: { 
-  side: 'home' | 'away';
+  side: 'Home Team' | 'Away Team';
   value: string;
   onChange: (text: string) => void;
-}) => (
-  <View style={styles.teamSection}>
-    <View style={styles.badgeWrapper}>
-      <Image
-        source={side === 'home' 
-          ? require('@/assets/images/Gradient1.png')
-          : require('@/assets/images/Gradient2.png')
-        }
-        style={styles.teamBadge}
-        resizeMode="cover"
-      />
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+
+  return (
+    <View style={styles.teamSection}>
+      <View style={styles.badgeWrapper}>
+        <Image
+          source={side === 'Home Team' 
+            ? require('@/assets/images/Gradient1.png')
+            : require('@/assets/images/Gradient2.png')
+          }
+          style={styles.teamBadge}
+          contentFit="cover"
+        />
+      </View>
+      <Pressable 
+        style={[styles.inputWrapper, isFocused && styles.inputWrapperFocused]}
+        onPress={() => inputRef.current?.focus()}
+      >
+        <TextInput
+          ref={inputRef}
+          value={value}
+          onChangeText={onChange}
+          placeholder={`${side}`}
+          placeholderTextColor="#808080"
+          style={styles.input}
+          autoCapitalize="words"
+          autoCorrect={false}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          selectionColor="#ccff33"
+        />
+      </Pressable>
     </View>
-    <TextInput
-      value={value}
-      onChangeText={onChange}
-      placeholder={`Enter ${side} team name`}
-      placeholderTextColor="#808080"
-      style={styles.input}
-      autoCapitalize="words"
-      autoCorrect={false}
-      maxLength={30}
-    />
-  </View>
-));
+  );
+});
 
 const PlayersDropdown = memo(({ 
   visible, 
@@ -95,10 +108,10 @@ export function TeamSetupModal({ visible, onClose, onSave }: TeamSetupModalProps
   });
   const [showPlayersDropdown, setShowPlayersDropdown] = useState(false);
 
-  const handleTeamNameChange = (side: 'home' | 'away', text: string) => {
+  const handleTeamNameChange = (side: 'Home Team' | 'Away Team', text: string) => {
     setSetup(prev => ({
       ...prev,
-      [`${side}Team`]: text,
+      [side === 'Home Team' ? 'homeTeam' : 'awayTeam']: text,
     }));
   };
 
@@ -130,20 +143,20 @@ export function TeamSetupModal({ visible, onClose, onSave }: TeamSetupModalProps
           <ScrollView style={styles.content} bounces={false}>
             <View style={styles.teamsContainer}>
               <View style={styles.teamColumn}>
-                <TeamBadge 
-                  side="home"
+                <TeamInput 
+                  side="Home Team"
                   value={setup.homeTeam}
-                  onChange={(text) => handleTeamNameChange('home', text)}
+                  onChange={(text) => handleTeamNameChange('Home Team', text)}
                 />
               </View>
               <View style={styles.vsContainer}>
                 <ThemedText style={styles.vsText}>VS</ThemedText>
               </View>
               <View style={styles.teamColumn}>
-                <TeamBadge 
-                  side="away"
+                <TeamInput 
+                  side="Away Team"
                   value={setup.awayTeam}
-                  onChange={(text) => handleTeamNameChange('away', text)}
+                  onChange={(text) => handleTeamNameChange('Away Team', text)}
                 />
               </View>
             </View>
@@ -201,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modal: {
-    backgroundColor: '#151718',
+    backgroundColor: '#000002',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     height: '85%',
@@ -215,7 +228,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '800',
     color: '#FFFFFF',
   },
   closeButton: {
@@ -236,30 +249,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   teamSection: {
-    alignItems: 'center',
-    width: '100%',
+    marginBottom: 24,
   },
   badgeWrapper: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    marginBottom: 16,
-    overflow: 'hidden',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   teamBadge: {
-    width: '100%',
-    height: '100%',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+  },
+  inputWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#2A2A2A',
+    paddingBottom: 8,
+  },
+  inputWrapperFocused: {
+    borderBottomColor: '#ccff33',
+    borderBottomWidth: 2,
   },
   input: {
-    width: '90%',
-    height: 44,
-    fontSize: 15,
+    fontSize: 17,
     color: '#FFFFFF',
-    backgroundColor: '#2A2A2A',
-    borderRadius: 10,
-    paddingHorizontal: 12,
     textAlign: 'center',
-    borderWidth: 0,
+    padding: 8,
+    height: 40,
   },
   vsContainer: {
     paddingHorizontal: 20,
@@ -288,6 +303,7 @@ const styles = StyleSheet.create({
   playersValue: {
     fontSize: 17,
     color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   playersDropdown: {
     backgroundColor: '#2A2A2A',
@@ -309,10 +325,11 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 17,
     color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   dropdownTextSelected: {
     color: '#ccff33',
-    fontWeight: '500',
+    fontWeight: '800',
   },
   saveButton: {
     padding: 16,

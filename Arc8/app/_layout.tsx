@@ -16,16 +16,26 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts(fonts);
+  const [fontsLoaded] = useFonts({
+    'DMSans-Regular': require('../assets/fonts/DMSans-Regular.ttf'),
+    'DMSans-Medium': require('../assets/fonts/DMSans-Medium.ttf'),
+    'DMSans-Bold': require('../assets/fonts/DMSans-Bold.ttf'),
+    'DMSans-Italic': require('../assets/fonts/DMSans-Italic.ttf'),
+    'FunnelSans-Regular': require('../assets/fonts/FunnelSans-Regular.ttf'),
+    'FunnelSans-Medium': require('../assets/fonts/FunnelSans-Medium.ttf'),
+    'FunnelSans-Bold': require('../assets/fonts/FunnelSans-Bold.ttf'),
+    'FunnelSans-BoldItalic': require('../assets/fonts/FunnelSans-BoldItalic.ttf'),
+    // ... other fonts
+  });
   const isModalOpen = useUIStore(state => state.isModalOpen);
 
   useEffect(() => {
-    if (loaded) {
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontsLoaded]);
 
-  if (!loaded) {
+  if (!fontsLoaded) {
     return null;
   }
 

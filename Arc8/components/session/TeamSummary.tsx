@@ -1,28 +1,64 @@
 import React from 'react';
-import { View, StyleSheet, Image, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import { Image } from 'expo-image';
+import { Skeleton } from '@/components/ui/Skeleton';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 interface TeamSummaryProps {
   homeTeam: string;
   awayTeam: string;
   playersPerSide: string;
   onEdit: () => void;
+  loading?: boolean;
 }
 
 export const TeamSummary = React.memo(({ 
   homeTeam, 
   awayTeam, 
   playersPerSide,
-  onEdit 
+  onEdit,
+  loading = false
 }: TeamSummaryProps) => {
+  const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.teamsContainer}>
+          <View style={styles.teamInfo}>
+            <Skeleton width={48} height={48} borderRadius={24} />
+            <Skeleton width={80} height={20} style={styles.skeletonText} />
+          </View>
+
+          <ThemedText style={styles.vs}>VS</ThemedText>
+
+          <View style={styles.teamInfo}>
+            <Skeleton width={48} height={48} borderRadius={24} />
+            <Skeleton width={80} height={20} style={styles.skeletonText} />
+          </View>
+        </View>
+
+        <View style={styles.detailsContainer}>
+          <Skeleton width={60} height={16} />
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <Animated.View 
+      style={styles.container}
+      entering={FadeIn.duration(300)}
+    >
       <View style={styles.teamsContainer}>
         <View style={styles.teamInfo}>
           <Image
             source={require('@/assets/images/Gradient1.png')}
+            placeholder={blurhash}
+            contentFit="cover"
+            transition={200}
             style={styles.teamBadge}
-            resizeMode="cover"
           />
           <ThemedText style={styles.teamName}>
             {homeTeam || 'Home Team'}
@@ -34,8 +70,10 @@ export const TeamSummary = React.memo(({
         <View style={styles.teamInfo}>
           <Image
             source={require('@/assets/images/Gradient2.png')}
+            placeholder={blurhash}
+            contentFit="cover"
+            transition={200}
             style={styles.teamBadge}
-            resizeMode="cover"
           />
           <ThemedText style={styles.teamName}>
             {awayTeam || 'Away Team'}
@@ -48,7 +86,7 @@ export const TeamSummary = React.memo(({
           {playersPerSide}
         </ThemedText>
       </View>
-    </View>
+    </Animated.View>
   );
 });
 
@@ -107,5 +145,8 @@ const styles = StyleSheet.create({
   playersInfo: {
     fontSize: 14,
     color: '#808080',
+  },
+  skeletonText: {
+    marginTop: 8,
   },
 }); 

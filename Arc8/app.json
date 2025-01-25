@@ -51,6 +51,40 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "fonts": [
+      {
+        "asset": "assets/fonts/DMSans-Regular.ttf",
+        "family": "DMSans-Regular"
+      },
+      {
+        "asset": "assets/fonts/DMSans-Medium.ttf",
+        "family": "DMSans-Medium"
+      },
+      {
+        "asset": "assets/fonts/DMSans-Bold.ttf",
+        "family": "DMSans-Bold"
+      },
+      {
+        "asset": "assets/fonts/DMSans-Italic.ttf",
+        "family": "DMSans-Italic"
+      },
+      {
+        "asset": "assets/fonts/FunnelSans-Regular.ttf",
+        "family": "FunnelSans-Regular"
+      },
+      {
+        "asset": "assets/fonts/FunnelSans-Medium.ttf",
+        "family": "FunnelSans-Medium"
+      },
+        {
+          "asset": "assets/fonts/FunnelSans-Bold.ttf",
+          "family": "FunnelSans-Bold"
+        },
+        {
+          "asset": "assets/fonts/FunnelSans-BoldItalic.ttf",
+          "family": "FunnelSans-BoldItalic"
+        }
+    ]
   }
 }
