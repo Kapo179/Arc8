@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import React from 'react';
 
 export default function NotificationsScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Notifications</ThemedText>
+      <ThemedText type="h1">Notifications</ThemedText>
       <ThemedText style={styles.subtitle}>Your notifications will appear here</ThemedText>
     </ThemedView>
   );

@@ -1,14 +1,15 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
+import { Colors } from '@/constants/Colors';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   
   return (
     <Tabs
@@ -20,7 +21,7 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarShowLabel: false,
         headerStyle: {
-          backgroundColor: '#151718',
+          backgroundColor: Colors.dark.background,
         },
         headerTitleStyle: {
           fontFamily: 'DMSans-Medium',
@@ -40,14 +41,14 @@ export default function TabLayout() {
           },
           Platform.select({
             ios: {
-              backgroundColor: '#151718',
+              backgroundColor: Colors.dark.background,
               shadowColor: '#000000',
               shadowOffset: { width: 0, height: -2 },
               shadowOpacity: 0.1,
               shadowRadius: 2,
             },
             android: {
-              backgroundColor: '#151718',
+              backgroundColor: Colors.dark.background,
               elevation: 8,
             },
           }),
@@ -82,34 +83,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="achievements"
-        options={{
-          title: 'Achievements',
-          tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={28} 
-              name="trophy"
-              color={color}
-              filled={focused}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="team"
-        options={{
-          title: 'Team',
-          tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={28} 
-              name="shirt"
-              color={color}
-              filled={focused}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
@@ -129,25 +102,10 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#151718',
-    borderTopWidth: 0,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  tabBarIOS: {
-    backgroundColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  tabBarAndroid: {
-    elevation: 8,
-    backgroundColor: '#151718',
+    borderTopWidth: 0,
   },
 });

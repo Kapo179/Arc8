@@ -4,7 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { TabBar } from '@/components/ui/TabBar';
 import { FootballFAB } from '@/components/session/FootballFAB';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
@@ -12,9 +12,12 @@ export default function HomeScreen() {
   const router = useRouter();
   const tabs = ['For You', 'Activity'];
 
-  const handlePress = (route: string) => {
+  const handlePress = (route: 'create' | 'join') => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(route);
+    router.push({
+      pathname: '/game/[action]',
+      params: { action: route }
+    } as any);
   };
 
   const renderForYou = () => (
@@ -24,31 +27,29 @@ export default function HomeScreen() {
       </ThemedText>
       
       <View style={styles.cardsContainer}>
-        <Pressable 
-          style={styles.card}
-          onPress={() => handlePress('/game/create')}
-        >
-          <View style={styles.iconCircle}>
-            <ThemedText style={styles.iconText}>+</ThemedText>
-          </View>
-          <ThemedText style={styles.cardTitle}>Create a room</ThemedText>
-          <ThemedText style={styles.cardDescription}>
-            Build your own community! Invite your friends and let people with similar interests find you.
-          </ThemedText>
-        </Pressable>
+        <Link href={{ pathname: '/game/[action]', params: { action: 'create' } } as any} asChild>
+          <Pressable style={styles.card}>
+            <View style={styles.iconCircle}>
+              <ThemedText style={styles.iconText}>+</ThemedText>
+            </View>
+            <ThemedText style={styles.cardTitle}>Create a room</ThemedText>
+            <ThemedText style={styles.cardDescription}>
+              Build your own community! Invite your friends and let people with similar interests find you.
+            </ThemedText>
+          </Pressable>
+        </Link>
 
-        <Pressable 
-          style={styles.card}
-          onPress={() => handlePress('/game/join')}
-        >
-          <View style={styles.iconCircle}>
-            <ThemedText style={styles.iconText}>○</ThemedText>
-          </View>
-          <ThemedText style={styles.cardTitle}>Discover rooms</ThemedText>
-          <ThemedText style={styles.cardDescription}>
-            Hop in and join some open rooms, or follow some interesting people to see what they are up to.
-          </ThemedText>
-        </Pressable>
+        <Link href={{ pathname: '/game/[action]', params: { action: 'join' } } as any} asChild>
+          <Pressable style={styles.card}>
+            <View style={styles.iconCircle}>
+              <ThemedText style={styles.iconText}>○</ThemedText>
+            </View>
+            <ThemedText style={styles.cardTitle}>Discover rooms</ThemedText>
+            <ThemedText style={styles.cardDescription}>
+              Hop in and join some open rooms, or follow some interesting people to see what they are up to.
+            </ThemedText>
+          </Pressable>
+        </Link>
       </View>
     </View>
   );

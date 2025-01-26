@@ -1,10 +1,11 @@
 import React, { useState, memo, useRef } from 'react';
-import { View, StyleSheet, Modal, Pressable, Image, Platform, ScrollView, TextInput } from 'react-native';
+import { View, StyleSheet, Modal, Pressable, Platform, ScrollView, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { PLAYERS_OPTIONS, PlayersPerSide } from '@/constants/game';
+import { Image as ExpoImage } from 'expo-image';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 interface TeamSetupModalProps {
@@ -34,7 +35,7 @@ const TeamInput = memo(({
   return (
     <View style={styles.teamSection}>
       <View style={styles.badgeWrapper}>
-        <Image
+        <ExpoImage
           source={side === 'Home Team' 
             ? require('@/assets/images/Gradient1.png')
             : require('@/assets/images/Gradient2.png')

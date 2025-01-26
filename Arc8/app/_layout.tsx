@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect } from 'react';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -10,6 +11,9 @@ import { fonts } from '@/src/config/fonts';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import 'react-native-reanimated';
 import { useUIStore } from '@/stores/uiStore';
+import { ThemeProvider as CustomThemeProvider } from '@/src/theme/ThemeContext';
+import { TamaguiProvider } from 'tamagui';
+import config from '../tamagui.config';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,25 +44,27 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: {
-              backgroundColor: '#151718',
-            },
-            tabBarStyle: {
-              display: isModalOpen ? 'none' : 'flex',
-            },
-          }}>
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-        <StatusBar 
-          style="light"
-          backgroundColor="#151718"
-        />
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <TamaguiProvider config={config}>
+      <SafeAreaProvider>
+        <CustomThemeProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: '#000000',
+                },
+                presentation: 'modal',
+              }}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+            <StatusBar 
+              style="light"
+              backgroundColor="#151718"
+            />
+          </ThemeProvider>
+        </CustomThemeProvider>
+      </SafeAreaProvider>
+    </TamaguiProvider>
   );
 }

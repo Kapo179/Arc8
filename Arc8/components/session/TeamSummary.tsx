@@ -28,14 +28,18 @@ export const TeamSummary = React.memo(({
         <View style={styles.teamsContainer}>
           <View style={styles.teamInfo}>
             <Skeleton width={48} height={48} borderRadius={24} />
-            <Skeleton width={80} height={20} style={styles.skeletonText} />
+            <View style={styles.skeletonText}>
+              <Skeleton width={80} height={20} />
+            </View>
           </View>
 
           <ThemedText style={styles.vs}>VS</ThemedText>
 
           <View style={styles.teamInfo}>
             <Skeleton width={48} height={48} borderRadius={24} />
-            <Skeleton width={80} height={20} style={styles.skeletonText} />
+            <View style={styles.skeletonText}>
+              <Skeleton width={80} height={20} />
+            </View>
           </View>
         </View>
 

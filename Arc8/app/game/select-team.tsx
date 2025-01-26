@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Pressable, Platform, Image } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { Stack } from 'expo-router/stack';
 import { ThemedText } from '@/components/ThemedText';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -90,7 +91,6 @@ export default function SelectTeamScreen() {
           },
           headerTintColor: '#FFFFFF',
           headerBackTitle: 'Match Setup',
-          headerBackTitleVisible: true,
         }} 
       />
 

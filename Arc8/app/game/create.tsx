@@ -13,7 +13,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { GradientButton } from '@/components/ui/GradientButton';
-import GlowingButton from '@/components/ui/GlowingButton';
+import { Button, XStack, YStack } from 'tamagui';
 
 const EMOJIS = {
   team: '⚽',
@@ -29,20 +29,18 @@ const SECTIONS = [
     showLabel: false,
     chevronType: 'chevron-right',
   },
-  {
-    id: 'gameType',
-    icon: '🏆',
-    label: 'Game Type',
-    value: (form: GameSetupForm) => form.gameType === 'friendly' ? 'Friendly' : 'Ranked',
-    showLabel: true,
-    chevronType: 'none',
-  },
 ];
+
+interface TeamSetup {
+  homeTeam: string;
+  awayTeam: string;
+  playersPerSide: string;
+}
 
 interface GameSetupForm {
   homeTeam: string | null;
   awayTeam: string | null;
-  gameType: GameType;
+  gameType: 'private' | 'ranked';  // Changed from 'friendly' to 'private'
 }
 
 export default function CreateGameScreen() {
@@ -52,7 +50,7 @@ export default function CreateGameScreen() {
   const [form, setForm] = useState<GameSetupForm>({
     homeTeam: null,
     awayTeam: null,
-    gameType: 'friendly',
+    gameType: 'private',  // Changed from 'friendly' to 'private'
   });
   const [teamSetup, setTeamSetup] = useState({
     homeTeam: '',
@@ -62,8 +60,8 @@ export default function CreateGameScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const insets = useSafeAreaInsets();
 
-  const handleCreate = () => {
-    // TODO: Validate and submit form
+  const handleCreate = (type: 'private' | 'ranked') => {
+    // TODO: Validate and submit form with type
     router.back();
   };
 
@@ -169,57 +167,37 @@ export default function CreateGameScreen() {
     );
   };
 
-  const renderGameTypeSection = () => {
-    const isTeamsSelected = teamSetup.homeTeam && teamSetup.awayTeam;
-    
-    return (
-      <View style={[
-        styles.section,
-        !isTeamsSelected && styles.sectionDisabled
-      ]}>
-        <View style={styles.sectionContent}>
-          <View style={[
-            styles.iconContainer,
-            !isTeamsSelected && styles.iconContainerDisabled
-          ]}>
-            <ThemedText style={styles.icon}>🏆</ThemedText>
-          </View>
-          <View style={styles.textContainer}>
-            <ThemedText style={[
-              styles.label,
-              !isTeamsSelected && styles.labelDisabled
-            ]}>Game Type</ThemedText>
-            <View style={styles.gameTypeButtons}>
-              <Pressable
-                style={[
-                  styles.gameTypeButton,
-                  form.gameType === 'friendly' && styles.gameTypeButtonSelected,
-                  !isTeamsSelected && styles.gameTypeButtonDisabled
-                ]}
-                onPress={() => isTeamsSelected && updateForm({ gameType: 'friendly' })}
-                disabled={!isTeamsSelected}
-              >
-                <ThemedText style={[
-                  styles.gameTypeButtonText,
-                  form.gameType === 'friendly' && styles.gameTypeButtonTextSelected,
-                  !isTeamsSelected && styles.gameTypeButtonTextDisabled
-                ]}>
-                  Friendly
-                </ThemedText>
-              </Pressable>
-              
-              <GlowingButton 
-                onPress={() => isTeamsSelected && updateForm({ gameType: 'ranked' })}
-                text="Ranked"
-                selected={form.gameType === 'ranked'}
-                disabled={!isTeamsSelected}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  const renderActionButtons = () => (
+    <YStack
+      space="$4"
+      padding="$4"
+      paddingBottom={insets.bottom}
+      borderTopWidth={1}
+      borderTopColor="$borderColor"
+    >
+      <Button
+        size="$6"
+        theme="arc8"
+        backgroundColor="$background"
+        pressStyle={{ opacity: 0.8 }}
+        onPress={() => handleCreate('private')}
+        icon={<MaterialCommunityIcons name="account-group" size={24} color="#000000" />}
+      >
+        Private Match
+      </Button>
+
+      <Button
+        size="$6"
+        theme="arc8"
+        backgroundColor="$background"
+        pressStyle={{ opacity: 0.8 }}
+        onPress={() => handleCreate('ranked')}
+        icon={<MaterialCommunityIcons name="trophy" size={24} color="#000000" />}
+      >
+        Ranked Match
+      </Button>
+    </YStack>
+  );
 
   return (
     <View style={styles.container}>
@@ -237,7 +215,6 @@ export default function CreateGameScreen() {
           ),
           headerTintColor: '#FFFFFF',
           headerBackTitle: 'Home',
-          headerBackTitleVisible: true,
           headerStyle: {
             backgroundColor: 'transparent',
           },
@@ -260,8 +237,6 @@ export default function CreateGameScreen() {
 
         {renderTeamSection()}
         
-        {renderGameTypeSection()}
-        
         {SECTIONS.filter(section => section.id !== 'team' && section.id !== 'gameType').map((section) => (
           <Pressable 
             key={section.id}
@@ -280,27 +255,20 @@ export default function CreateGameScreen() {
                   {section.value(form)}
                 </ThemedText>
               </View>
-              <MaterialCommunityIcons 
-                name={section.chevronType} 
-                size={24} 
-                color="#ccff33"
-                style={styles.chevron}
-              />
+              {section.chevronType !== 'none' && (
+                <MaterialCommunityIcons 
+                  name="chevron-right"
+                  size={24}
+                  color="#ccff33"
+                  style={styles.chevron}
+                />
+              )}
             </View>
           </Pressable>
         ))}
-
-        <Pressable onPress={handleCreate}>
-          <LinearGradient
-            colors={['#ccff33', '#9ef01a']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.createButton}
-          >
-            <ThemedText style={styles.createButtonText}>Create Match</ThemedText>
-          </LinearGradient>
-        </Pressable>
       </ScrollView>
+
+      {renderActionButtons()}
 
       <TeamSetupModal
         visible={showTeamSetup}
@@ -333,7 +301,7 @@ const styles = StyleSheet.create({
     lineHeight: 40,
   },
   subtitle: {
-    fontFamily: 'FunnelSans-Regular',
+    fontFamily: 'FunnelSans-Bold',
     fontSize: 16,
     color: '#9BA1A6',
     lineHeight: 24,
@@ -365,16 +333,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'center',
   },
   label: {
     fontSize: 13,
     color: '#808080',
-    marginBottom: 2,
+    marginBottom: 8,
+    fontFamily: 'FunnelSans-Bold',
   },
   value: {
     fontSize: 17,
-    color: '#FFFFFF',
+    color: '#808080',
   },
   chevron: {
     marginLeft: 8,
@@ -383,8 +351,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 24,
-    marginHorizontal: 16,
     ...Platform.select({
       ios: {
         shadowColor: '#ccff33',
@@ -400,7 +366,7 @@ const styles = StyleSheet.create({
   createButtonText: {
     color: '#000000',
     fontSize: 17,
-    fontWeight: '800',
+    fontFamily: 'FunnelSans-Bold',
   },
   teamContainer: {
     backgroundColor: '#1A1A1A',
@@ -426,47 +392,47 @@ const styles = StyleSheet.create({
   editIconContainer: {
     backgroundColor: '#000002',
   },
-  gameTypeButtons: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
-  },
-  gameTypeButton: {
-    flex: 1,
-    backgroundColor: '#1A1A1A',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#2A2A2A',
-  },
-  gameTypeButtonSelected: {
-    backgroundColor: '#ccff33',
-    borderColor: '#ccff33',
-  },
-  gameTypeButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  gameTypeButtonTextSelected: {
-    color: '#000000',
-  },
   sectionDisabled: {
     opacity: 0.5,
-  },
-  iconContainerDisabled: {
-    borderColor: '#404040',
   },
   labelDisabled: {
     color: '#404040',
   },
-  gameTypeButtonDisabled: {
-    backgroundColor: '#1A1A1A',
-    borderColor: '#2A2A2A',
+  buttonContainer: {
+    backgroundColor: '#000000',
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    paddingBottom: 16,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#2A2A2A',
+    gap: 12,
   },
-  gameTypeButtonTextDisabled: {
-    color: '#404040',
+  actionButton: {
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#ccff33',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  actionButtonText: {
+    color: '#000000',
+    fontSize: 17,
+    fontFamily: 'FunnelSans-Bold',
+    marginLeft: 8,
+  },
+  buttonIcon: {
+    marginRight: 4,
   },
 }); 

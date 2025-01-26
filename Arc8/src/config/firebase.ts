@@ -1,6 +1,8 @@
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+// TODO: Persistence is currently memory-only. To enable persistent auth state,
+// we need to properly configure AsyncStorage with Firebase Auth.
+// See: https://firebase.google.com/docs/auth/web/persistence
 
 // Replace with your Firebase config
 const firebaseConfig = {
@@ -13,8 +15,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
+const auth = getAuth(app);
 
-export { auth }; 
+export default auth; 

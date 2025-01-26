@@ -47,7 +47,9 @@
         {
           "initialOrientation": "PORTRAIT"
         }
-      ]
+      ],
+      "expo-font",
+      "react-native-reanimated"
     ],
     "experiments": {
       "typedRoutes": true

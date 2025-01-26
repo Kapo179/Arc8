@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { auth } from '@/src/config/firebase';
+import auth from '@/src/config/firebase';
 import { signOut } from 'firebase/auth';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import React from 'react';
 
 export default function ProfileScreen() {
   const handleSignOut = async () => {
@@ -15,10 +16,10 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Profile</ThemedText>
+      <ThemedText type="h1">Profile</ThemedText>
       {auth.currentUser && (
         <ThemedText style={styles.email}>
-          Email: {auth.currentUser.email}
+          Email: {auth.currentUser?.email}
         </ThemedText>
       )}
       <ThemedText style={styles.signOut} onPress={handleSignOut}>
